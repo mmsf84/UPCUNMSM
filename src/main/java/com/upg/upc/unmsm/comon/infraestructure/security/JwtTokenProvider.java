@@ -1,18 +1,23 @@
 package com.upg.upc.unmsm.comon.infraestructure.security;
 
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import com.upg.upc.unmsm.user.dto.UserAuthDto;
 import com.upg.upc.unmsm.user.dto.UserClaimDto;
 
 import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -47,6 +52,27 @@ public class JwtTokenProvider {
 				.compact();
 	}	
 	
-	
-	
+	public String getUsername(String token) {
+		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+	}
+
+	public String resolveToken(HttpServletRequest req) {
+		String bearerToken = req.getHeader("Authorization");
+		if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+			return bearerToken.substring(7, bearerToken.length());
+		}
+		return null;
+	}
+	public boolean validateToken(String token) throws Exception {
+		try {
+			Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+			return true;
+		} catch (JwtException | IllegalArgumentException e) {
+			throw new Exception("Missing, invalid or expired token");
+		}
+	}
+	public Authentication getAuthentication(String token) {
+		String userName = getUsername(token);
+		return new UsernamePasswordAuthenticationToken(userName, null, Collections.emptyList());
+	}
 }
