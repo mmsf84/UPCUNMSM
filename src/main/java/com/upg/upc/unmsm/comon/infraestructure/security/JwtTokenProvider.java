@@ -13,8 +13,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import com.upg.upc.unmsm.user.dto.UserAuthDto;
-import com.upg.upc.unmsm.user.dto.UserClaimDto;
+import com.upg.upc.unmsm.user.application.dto.UserAuthDto;
+import com.upg.upc.unmsm.user.application.dto.UserClaimDto;
 
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtException;

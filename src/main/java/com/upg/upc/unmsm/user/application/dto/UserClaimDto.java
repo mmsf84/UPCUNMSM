@@ -1,4 +1,4 @@
-package com.upg.upc.unmsm.user.dto;
+package com.upg.upc.unmsm.user.application.dto;
 
  
 public class UserClaimDto {
